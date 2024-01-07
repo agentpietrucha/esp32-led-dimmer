@@ -27,8 +27,6 @@ export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const email = searchParams.get('email');
 
-  console.log('email', email);
-
   if (!email) return new Response(null, { status: 400 });
 
   const user = await db.user.findFirst({

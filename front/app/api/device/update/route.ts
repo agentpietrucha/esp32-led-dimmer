@@ -14,8 +14,6 @@ export async function POST(req: Request) {
     select: { devices: true },
   });
 
-  console.log('user', user);
-
   const devices = user?.devices;
 
   if (devices && devices.length) {
