@@ -86,9 +86,9 @@ void buttonPressHandler();
 void setup()
 {
   Serial.begin(115200);
-  String macAddress = WiFi.macAddress();
-  Serial.print("MAC address: ");
-  Serial.println(macAddress);
+  Serial.print("mac_address: ");
+  Serial.println(WiFi.macAddress());
+
   setupPreferences();
   setupPins();
 
@@ -170,29 +170,16 @@ void connectWiFi()
   {
     blink(1);
   }
-
-  Serial.println(WiFi.localIP());
 }
 
 void root()
 {
-  Serial.println("[Server] root");
-  Serial.print("[Server] uri:");
-  Serial.println(server.uri());
-
   server.sendHeader("Access-Control-Allow-Origin", "*");
   server.sendContent(index_html);
 }
 
 void handleSetup()
 {
-  Serial.println("[Server] handleSetup");
-  Serial.println("setup request");
-  Serial.print("arguments:");
-  Serial.println(server.arg("name"));
-  Serial.println(server.arg("password"));
-  Serial.println(server.arg("email"));
-
   preferences.putString("W_NAME", server.arg("name"));
   preferences.putString("W_PASSWD", server.arg("password"));
   preferences.putString("W_EMAIL", server.arg("email"));
@@ -267,23 +254,7 @@ void setupMQTT()
 
 void mqttCallback(char *topic, byte *payload, unsigned int length)
 {
-  // if (strcmp(topic, "switch") == 0) // working
-  // {
-  //   if ((char)payload[0] == '0')
-  //   {
-  //     // turn off
-  //     digitalWrite(LED, LOW);
-  //   }
-  //   else if ((char)payload[0] == '1')
-  //   {
-  //     // turn on
-  //     digitalWrite(LED, HIGH);
-  //   }
-  // }
-  // else
   String mac = WiFi.macAddress();
-  Serial.print("topis:");
-  Serial.println(topic);
   if (strcmp(topic, String("dim/" + mac).c_str()) == 0) // working
   {
     char x = (char)payload[0];
@@ -303,14 +274,10 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
       dimValue = 0;
     }
 
-    Serial.print("Dim value: ");
-    Serial.println(dimValue);
-
     pinVoltage = dimValue;
   }
   else if (strcmp(topic, String("get_status/" + mac).c_str()) == 0)
   {
-    Serial.println("get_status");
     pbClient->publish(String("status/" + WiFi.macAddress()).c_str(), String(pinVoltage).c_str());
   }
 }
@@ -324,10 +291,6 @@ void reconnect()
     if (pbClient->connect(clientId.c_str(), "espled", "espLEDespL3D"))
     {
       String mac = WiFi.macAddress();
-      Serial.print("dim topic: ");
-      Serial.println(String("dim/" + mac));
-      Serial.print("get_status topic: ");
-      Serial.println(String("get_status/" + mac));
       pbClient->subscribe(String("dim/" + mac).c_str());
       pbClient->subscribe(String("get_status/" + mac).c_str());
     }
