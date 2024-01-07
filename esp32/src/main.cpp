@@ -230,7 +230,7 @@ void registerDevice()
     return;
   }
   HTTPClient http;
-  http.begin("http://192.168.1.121:3000/api/device/register");
+  http.begin("https://esp32-led-dimmer.vercel.app/api/device/register");
   http.addHeader("Content-Type", "application/json");
   String body = "{\"mac_address\": \"" + WiFi.macAddress() + "\", \"email\": \"" + preferences.getString("W_EMAIL") + "\"}";
   int code = http.POST(body);
