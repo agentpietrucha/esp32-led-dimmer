@@ -32,7 +32,10 @@ const getUser = async (email: string) => {
 
 export async function POST(req: Request) {
   const { mac_address, email } = await req.json();
+  console.log('[POST DEVICE/REGISTER] mac_address', mac_address);
+  console.log('[POST DEVICE/REGISTER] email', email);
   const { users } = await getUser(email);
+  console.log('[POST DEVICE/REGISTER] users', users);
   if (!users) return new Response('Non existing user', { status: 401 });
 
   try {
