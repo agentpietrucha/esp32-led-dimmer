@@ -32,6 +32,7 @@ export function LEDControls() {
       })
       .then((response) => handleInitialState(parseInt(response)))
       .catch((e) => {
+        console.log('[LEDControls] getDeviceState error', e);
         let message = e instanceof Error ? e.message : 'Server Error';
         message = message || 'Server Error';
         toast({
